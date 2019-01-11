@@ -19,10 +19,10 @@ require_once( dirname( dirname( __FILE__ ) ) . '/autoPlugin/adminUpdatingPage.ph
  */
 function wpdocs_register_my_custom_menu_page() {
     add_menu_page(
-        __( 'Update Auto Db', 'textdomain' ),
-        'Update Auto Db',
+        __( 'Updating Auto Db', 'textdomain' ),
+        'Updating Auto Db',
         'manage_options',
-        'myplugin/myplugin-admin.php',
+        'adminUpdatingPage.php',
         renderUpdatingPage,
         null,
         null
