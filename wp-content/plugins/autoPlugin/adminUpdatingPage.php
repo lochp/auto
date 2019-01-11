@@ -30,12 +30,45 @@ function save_new_auto_db() {
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
 
+function auto_install(){
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . "car_info_history"; 
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+      id mediumint(9) NOT NULL AUTO_INCREMENT,
+      time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+      value text,
+      PRIMARY KEY  (id)
+    ) $charset_collate;";
+    
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
+}
+
+function insert_into_car_info_history($row){
+    global $wpdb;
+    $table_name = $wpdb->prefix . "car_info_history"; 
+    $wpdb->insert( 
+        $table_name, $row
+        );
+    /**
+     * $row = array( 
+            'time' => current_time( 'mysql' ), 
+            'value' => 'json auto value'
+        )
+     */
+}
+
+auto_install();
+
 function renderUpdatingPage(){
     ?>
     <div>
-        <div>Updating auto database</div>
+        <h3>Updating auto database</h3>
         <textarea name="textarea" style="width: 100%; height: 500px;" id="autoDataSource"></textarea>
-        <button class="button" id="btn" style="background-color:blue;width:40px;">   
+        <button class="button" id="btn" style="background-color:#0000a7;width:80px;color:white;text-align:center;font-weight:bold;">Save</button>   
     </div>
     <?php
 }
