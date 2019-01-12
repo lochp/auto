@@ -1,35 +1,4 @@
 <?php
-add_action( 'admin_footer', 'save_new_auto_db_javascript' ); // Write our JS below here
-
-function save_new_auto_db_javascript() { ?>
-	<script type="text/javascript" >
-	var save_auto_data = function($) {
-        var dataSource = jQuery('#autoDataSource').val();
-        var data = {
-            'action': 'save_new_auto_db',
-            'dataSource': dataSource
-        };
-        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-        jQuery.post(ajaxurl, data, function(response) {
-            alert('Got this from the server: ' + response);
-        });
-    }
-    jQuery('#btn').bind("click", save_auto_data);
-	</script> <?php
-}
-
-add_action( 'wp_ajax_save_new_auto_db', 'save_new_auto_db' );
-
-function save_new_auto_db() {
-	global $wpdb; // this is how you get access to the database
-
-	$whatever =  $_POST['dataSource'];
-
-    echo $whatever;
-
-	wp_die(); // this is required to terminate immediately and return a proper response
-}
-
 function auto_install(){
     global $wpdb;
 
@@ -47,21 +16,66 @@ function auto_install(){
     dbDelta( $sql );
 }
 
-function insert_into_car_info_history($row){
+auto_install();
+
+function insert_into_car_info_history($data){
     global $wpdb;
     $table_name = $wpdb->prefix . "car_info_history"; 
     $wpdb->insert( 
-        $table_name, $row
-        );
-    /**
-     * $row = array( 
+        $table_name, array(
             'time' => current_time( 'mysql' ), 
-            'value' => 'json auto value'
-        )
-     */
+            'value' => $data
+        ));
 }
 
-auto_install();
+add_action( 'admin_footer', 'save_new_auto_db_javascript' ); // Write our JS below here
+
+function save_new_auto_db_javascript() { ?>
+	<script type="text/javascript" >
+	var save_auto_data = function($) {
+        var dataSource = jQuery('#autoDataSource').val();
+        dataSource = JSON.parse(dataSource.substring((dataSource.indexOf('listCarsByBrand') + 16), (dataSource.indexOf('listPriceChange') - 5)));
+        // var carArr = Object.keys(dataSource).map(function(k) { return dataSource[k] });
+        var carBrand = ["chevrolet", "ford", "honda", "hyundai", "infiniti", "isuzu", "kia", "lexus", "maserati", "mazda", "mercedes", "mitsubishi", "nissan", "peugeot",
+                        "porsche", "renault", "ssangyong", "subaru", "suzuki", "toyota", "vinfast", "volkswagen", "volvo"];
+        var output = [];
+        carBrand.forEach(b => {
+            var carLst = dataSource[b];
+            carLst = Object.keys(carLst).map(function(k) {
+                delete carLst[k].carId;
+                delete carLst[k].shareUrl;
+                delete carLst[k].carImage;
+                return carLst[k];
+            });
+            output.push({
+                brand: b,
+                carList: carLst
+            });
+        });
+        var data = {
+            'action': 'save_new_auto_db',
+            'dataSource': JSON.stringify(output)
+        };
+        jQuery.post(ajaxurl, data, function(response) {
+            alert(response);
+        });
+    }
+    jQuery('#btn').bind("click", save_auto_data);
+	</script> <?php
+}
+
+add_action( 'wp_ajax_save_new_auto_db', 'save_new_auto_db' );
+
+function save_new_auto_db() {
+    global $wpdb; // this is how you get access to the database
+    
+	$data =  $_POST['dataSource'];
+    insert_into_car_info_history($data);
+    
+    echo "Updating Info successfully!";
+
+	wp_die(); // this is required to terminate immediately and return a proper response
+}
 
 function renderUpdatingPage(){
     ?>
