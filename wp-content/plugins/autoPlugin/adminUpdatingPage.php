@@ -8,7 +8,7 @@ function auto_install(){
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
       id mediumint(9) NOT NULL AUTO_INCREMENT,
       time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-      value text,
+      value mediumtext,
       PRIMARY KEY  (id)
     ) $charset_collate;";
     
@@ -69,10 +69,12 @@ add_action( 'wp_ajax_save_new_auto_db', 'save_new_auto_db' );
 function save_new_auto_db() {
     global $wpdb; // this is how you get access to the database
     
-	$data =  $_POST['dataSource'];
+    $data =  $_POST['dataSource'];
+    
     insert_into_car_info_history($data);
     
-    echo "Updating Info successfully!";
+    // echo "Updating Info successfully!";
+    echo $data;
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
