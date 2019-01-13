@@ -67,7 +67,7 @@ function save_new_auto_db_javascript() { ?>
         });
         var data = {
             'action': 'save_new_auto_db',
-            'dataSource': JSON.stringify(output)
+            'dataSource': output
         };
         jQuery.post(ajaxurl, data, function(response) {
             alert(response);
@@ -84,9 +84,10 @@ function save_new_auto_db() {
     
     $data =  $_POST['dataSource'];
     
-    insert_into_car_info_history($data);
-    
-    echo "Updating Info successfully!";
+    // insert_into_car_info_history($data);
+
+    // echo "Updating Info successfully!";
+    echo count($data);
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
