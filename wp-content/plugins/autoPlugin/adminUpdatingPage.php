@@ -16,7 +16,20 @@ function auto_install(){
     dbDelta( $sql );
 }
 
+function init_auto_category(){
+    require_once( ABSPATH . 'wp-admin/includes/taxonomy.php' );
+    $catArr = array("chevrolet", "ford", "honda", "hyundai", "infiniti", "isuzu", "kia", "lexus", "maserati", "mazda", "mercedes", "mitsubishi", "nissan", "peugeot",
+    "porsche", "renault", "ssangyong", "subaru", "suzuki", "toyota", "vinfast", "volkswagen", "volvo");
+    foreach($catArr as $c){
+        $obj = get_category_by_slug($c);
+        if ($obj == null || $obj == false){
+            $newCat = wp_create_category( ucfirst($c));
+        }
+    }
+}
+
 auto_install();
+init_auto_category();
 
 function insert_into_car_info_history($data){
     global $wpdb;
