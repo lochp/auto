@@ -86,8 +86,7 @@ function save_new_auto_db() {
     
     // insert_into_car_info_history($data);
 
-    // echo "Updating Info successfully!";
-    echo count($data);
+    echo "Updating Info successfully!";
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }

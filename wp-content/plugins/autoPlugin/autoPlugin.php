@@ -3,7 +3,8 @@
    Plugin Name: Auto Plugin
    Plugin URI: http://firstpage.com
    description: >-
-  a plugin to update car price list into database and post
+  a plugin to update car price list into database and post >-
+  post_max_size=20M, php_value=20M, max_input_vars=250000
    Version: 1.0
    Author: Mr. loc
    Author URI: http://lochuynh.com
