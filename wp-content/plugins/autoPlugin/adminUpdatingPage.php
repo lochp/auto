@@ -29,25 +29,14 @@ function init_auto_category(){
 }
 
 // include custom jQuery
-function shapeSpace_include_custom_jquery() {
-
+function include_handle_auto_js() {
 	wp_deregister_script('jquery');
 	wp_enqueue_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
-    wp_register_script('customscripts', '/wp-includes/js/autoJs/handleAutoJs.js', array(), null, true);
-    wp_enqueue_script('customscripts');
+    wp_register_script('autoscripts', '/wp-includes/js/autoJs/handleAutoJs.js', array(), null, true);
+    wp_enqueue_script('autoscripts');
 }
 
-add_action('wp_enqueue_scripts', 'shapeSpace_include_custom_jquery');
-// add_action( 'wp_footer', 'test_page' );
-
-function test_page(){?>
-    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-    <script type="text/javascript" >
-        $( document ).ready(function($) {
-            $('#testDiv').innerHTML = 'ABCD';
-        });
-	</script> <?php
-}
+add_action('wp_enqueue_scripts', 'include_handle_auto_js');
 
 function insert_init_pages(){
     /**
