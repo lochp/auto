@@ -42,16 +42,63 @@ function insert_init_pages(){
     /**
      * Insert bang-gia-xe
      */
-
+    require_once( dirname( dirname( __FILE__ ) ) . '/autoPlugin/autoDao.php' );
+    require_once( ABSPATH . 'wp-includes/post.php' );
+    $bangGiaXe = AutoDao::get_instance_by_post_name('bang-gia-xe');
+    if ($bangGiaXe == false){
+        $user_id = get_current_user_id();
+        $content = '
+            <h3>Bảng giá xe</h3>
+            <div id="bangGiaXe">
+                <table style="width:90%;border: 1px solid black;">
+                    <tbody>
+                        <tr><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        ';
+        $bangGiaXeArr = array(
+            'post_author' => $user_id,
+            'post_content' => $content,
+            'post_title' => 'Bảng giá xe',
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_name' => 'bang-gia-xe'
+        );
+        wp_insert_post($bangGiaXeArr);
+    }
     /**
      * Insert so-sanh-xe
      */
-
+    $soSanhXe = AutoDao::get_instance_by_post_name('so-sanh-xe');
+    if ($soSanhXe == false){
+        $user_id = get_current_user_id();
+        $content = '
+            <h3>So sánh xe</h3>
+            <div id="soSanhXe">
+                <table style="width:90%;border: 1px solid black;">
+                    <tbody>
+                        <tr><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        ';
+        $soSanhXeArr = array(
+            'post_author' => $user_id,
+            'post_content' => $content,
+            'post_title' => 'So sánh xe',
+            'post_status' => 'publish',
+            'post_type' => 'page',
+            'post_name' => 'so-sanh-xe'
+        );
+        wp_insert_post($soSanhXeArr);
+    }
 }
 
 function init_data(){
     auto_install();
     init_auto_category();
+    insert_init_pages();
 }
 
 init_data();
