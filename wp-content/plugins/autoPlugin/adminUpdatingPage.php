@@ -28,8 +28,44 @@ function init_auto_category(){
     }
 }
 
-auto_install();
-init_auto_category();
+// include custom jQuery
+function shapeSpace_include_custom_jquery() {
+
+	wp_deregister_script('jquery');
+	wp_enqueue_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
+    wp_register_script('customscripts', '/wp-includes/js/autoJs/handleAutoJs.js', array(), null, true);
+    wp_enqueue_script('customscripts');
+}
+
+add_action('wp_enqueue_scripts', 'shapeSpace_include_custom_jquery');
+// add_action( 'wp_footer', 'test_page' );
+
+function test_page(){?>
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script type="text/javascript" >
+        $( document ).ready(function($) {
+            $('#testDiv').innerHTML = 'ABCD';
+        });
+	</script> <?php
+}
+
+function insert_init_pages(){
+    /**
+     * Insert bang-gia-xe
+     */
+
+    /**
+     * Insert so-sanh-xe
+     */
+
+}
+
+function init_data(){
+    auto_install();
+    init_auto_category();
+}
+
+init_data();
 
 function insert_into_car_info_history($data){
     global $wpdb;
@@ -83,9 +119,14 @@ function save_new_auto_db() {
     global $wpdb; // this is how you get access to the database
     
     $data =  $_POST['dataSource'];
+    insert_into_car_info_history(json_encode($data));
+    /**
+     * Insert auto posts into database
+     */
     
-    // insert_into_car_info_history($data);
-
+     /**
+      * 
+      */
     echo "Updating Info successfully!";
 
 	wp_die(); // this is required to terminate immediately and return a proper response
