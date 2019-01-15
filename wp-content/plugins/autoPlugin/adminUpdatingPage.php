@@ -31,9 +31,9 @@ function init_auto_category(){
 // include custom jQuery
 function include_handle_auto_js() {
 	wp_deregister_script('jquery');
-	wp_enqueue_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
-    wp_register_script('autoscripts', '/wp-includes/js/autoJs/handleAutoJs.js', array(), null, true);
-    wp_enqueue_script('autoscripts');
+    wp_enqueue_script('jquery', '/wp-includes/js/autoJs/jeasyui/jquery.min.js', array(), null, true);
+    wp_enqueue_script('jeasyui', '/wp-includes/js/autoJs/jeasyui/jquery.easyui.min.js', array(), null, true);
+    wp_enqueue_script('autoscripts', '/wp-includes/js/autoJs/handleAutoJs.js', array(), null, true);
 }
 
 add_action('wp_enqueue_scripts', 'include_handle_auto_js');
