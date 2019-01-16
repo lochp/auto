@@ -2,13 +2,28 @@
 function auto_install(){
     global $wpdb;
 
-    $table_name = $wpdb->prefix . "car_info_history"; 
+    $table_name = $wpdb->prefix . "all_specifications"; 
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
       id mediumint(9) NOT NULL AUTO_INCREMENT,
-      time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-      value mediumtext,
+      updatedTime datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+      carBrand text,
+      carCompetitors text,
+      carEngine text,
+      carFuelTankCapacity text,
+      carGear text,
+      carGroundClearance text,
+      carId mediumint(9),
+      carMoment text,
+      carName text,
+      carOrigin text,
+      carPower text,
+      carPrice text,
+      carPriceDeviation text,
+      carSize text,
+      carTurningCircle text,
+      carType text,
       PRIMARY KEY  (id)
     ) $charset_collate;";
     
@@ -103,14 +118,12 @@ function init_data(){
 init_data();
 add_action('wp_loaded', 'insert_init_pages');
 
-function insert_into_car_info_history($data){
+function insert_into_auto_all_specifications($data){
     global $wpdb;
-    $table_name = $wpdb->prefix . "car_info_history"; 
-    $wpdb->insert( 
-        $table_name, array(
-            'time' => current_time( 'mysql' ), 
-            'value' => $data
-        ));
+    $table_name = $wpdb->prefix . "all_specifications";
+    $timeStamp = current_time( 'mysql' );
+    $data[updatedTime] = $timeStamp;
+    $wpdb->insert( $table_name, $data);
 }
 
 add_action( 'admin_footer', 'save_new_auto_db_javascript' ); // Write our JS below here
@@ -127,7 +140,6 @@ function save_new_auto_db_javascript() { ?>
         carBrand.forEach(b => {
             var carLst = dataSource[b];
             carLst = Object.keys(carLst).map(function(k) {
-                delete carLst[k].carId;
                 delete carLst[k].shareUrl;
                 delete carLst[k].carImage;
                 return carLst[k];
@@ -137,6 +149,7 @@ function save_new_auto_db_javascript() { ?>
                 carList: carLst
             });
         });
+        console.log(output);
         var data = {
             'action': 'save_new_auto_db',
             'dataSource': output
@@ -155,11 +168,16 @@ function save_new_auto_db() {
     global $wpdb; // this is how you get access to the database
     
     $data =  $_POST['dataSource'];
-    insert_into_car_info_history(json_encode($data));
     /**
      * Insert auto posts into database
      */
-    
+    $catArr = array("chevrolet", "ford", "honda", "hyundai", "infiniti", "isuzu", "kia", "lexus", "maserati", "mazda", "mercedes", "mitsubishi", "nissan", "peugeot",
+    "porsche", "renault", "ssangyong", "subaru", "suzuki", "toyota", "vinfast", "volkswagen", "volvo");
+    foreach($data as $brand){
+        foreach($brand[carList] as $car){
+            insert_into_auto_all_specifications($car);
+        }
+    }
      /**
       * 
       */
