@@ -98,10 +98,10 @@ function insert_init_pages(){
 function init_data(){
     auto_install();
     init_auto_category();
-    insert_init_pages();
 }
 
 init_data();
+add_action('wp_loaded', 'insert_init_pages');
 
 function insert_into_car_info_history($data){
     global $wpdb;
