@@ -7,7 +7,7 @@ function auto_install(){
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
       id mediumint(9) NOT NULL AUTO_INCREMENT,
-      updatedTime datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+      updatedTime datetime DEFAULT '0000-00-00' NOT NULL,
       carBrand text,
       carCompetitors text,
       carEngine text,
@@ -121,8 +121,6 @@ add_action('wp_loaded', 'insert_init_pages');
 function insert_into_auto_all_specifications($data){
     global $wpdb;
     $table_name = $wpdb->prefix . "all_specifications";
-    $timeStamp = current_time( 'mysql' );
-    $data[updatedTime] = $timeStamp;
     $wpdb->insert( $table_name, $data);
 }
 
@@ -164,6 +162,31 @@ function save_new_auto_db_javascript() { ?>
 
 add_action( 'wp_ajax_save_new_auto_db', 'save_new_auto_db' );
 
+function create_auto_posts($cateArr){
+    require_once( dirname( dirname( __FILE__ ) ) . '/autoPlugin/autoDao.php' );
+    require_once( ABSPATH . 'wp-includes/post.php' );
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . "all_specifications";
+    $autoList = $wpdb->get_results( "SELECT * FROM {$table_name} where updatedTime = (select max(updatedTime) from {$table_name} )");
+    $user_id = get_current_user_id();
+    foreach ($autoList as $data){
+        $autoPost = AutoDao::get_instance_by_post_title($data->carBrand . ' ' .$data->carName);
+        if ($autoPost == false){
+            $content = "<h3>Thông số kỹ thuật<h3><div id='divInfo' value='{$data->id}' ></div>";
+            $autoPost = array(
+                'post_author' => $user_id,
+                'post_content' => $content,
+                'post_title' => $data->carBrand . ' ' .$data->carName,
+                'post_status' => 'publish',
+                'post_type' => 'post',
+                'post_category' => array($cateArr[strtolower($data->carBrand)]->term_id)
+            );
+            wp_insert_post($autoPost);
+        }
+    }
+}
+
 function save_new_auto_db() {
     global $wpdb; // this is how you get access to the database
     
@@ -173,17 +196,26 @@ function save_new_auto_db() {
      */
     $catArr = array("chevrolet", "ford", "honda", "hyundai", "infiniti", "isuzu", "kia", "lexus", "maserati", "mazda", "mercedes", "mitsubishi", "nissan", "peugeot",
     "porsche", "renault", "ssangyong", "subaru", "suzuki", "toyota", "vinfast", "volkswagen", "volvo");
+    $timeStamp = current_time( 'mysql' );
+    $cates = array();
     foreach($data as $brand){
         foreach($brand[carList] as $car){
+            $car[updatedTime] = $timeStamp;
             insert_into_auto_all_specifications($car);
         }
+        $cates[$brand[brand]] =  get_category_by_slug($brand[brand]);
     }
      /**
-      * 
+      * Create auto Posts
       */
+    create_auto_posts($cates);
     echo "Updating Info successfully!";
 
 	wp_die(); // this is required to terminate immediately and return a proper response
+}
+
+function create_auto_post($data){
+
 }
 
 function renderUpdatingPage(){
