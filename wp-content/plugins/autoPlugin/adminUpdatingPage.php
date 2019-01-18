@@ -63,14 +63,10 @@ function insert_init_pages(){
     if ($bangGiaXe == false){
         $user_id = get_current_user_id();
         $content = '
-            <h3>Bảng giá xe</h3>
-            <div id="bangGiaXe">
-                <table style="width:90%;border: 1px solid black;">
-                    <tbody>
-                        <tr><td></td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <input type="hidden" id="page_name" value="bang_gia_xe">
+        <div id="bangGiaXe">
+            <table id="dg-bang-gia-xe"></table>
+        </div>
         ';
         $bangGiaXeArr = array(
             'post_author' => $user_id,
@@ -89,14 +85,14 @@ function insert_init_pages(){
     if ($soSanhXe == false){
         $user_id = get_current_user_id();
         $content = '
-            <h3>So sánh xe</h3>
-            <div id="soSanhXe">
-                <table style="width:90%;border: 1px solid black;">
-                    <tbody>
-                        <tr><td></td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <input type="hidden" id="page_name" value="so_sanh_xe">
+        <div id="soSanhXe">
+            <table style="width:90%;border: 1px solid black;">
+                <tbody>
+                    <tr><td></td></tr>
+                </tbody>
+            </table>
+        </div>
         ';
         $soSanhXeArr = array(
             'post_author' => $user_id,
@@ -117,6 +113,13 @@ function init_data(){
 
 init_data();
 add_action('wp_loaded', 'insert_init_pages');
+
+function myplugin_ajaxurl() {
+    echo '<script type="text/javascript">
+           window.ajaxUrl = "' . admin_url('admin-ajax.php') . '";
+         </script>';
+}
+add_action('wp_head', 'myplugin_ajaxurl');
 
 function insert_into_auto_all_specifications($data){
     global $wpdb;
@@ -147,7 +150,6 @@ function save_new_auto_db_javascript() { ?>
                 carList: carLst
             });
         });
-        console.log(output);
         var data = {
             'action': 'save_new_auto_db',
             'dataSource': output
@@ -160,7 +162,22 @@ function save_new_auto_db_javascript() { ?>
 	</script> <?php
 }
 
+function load_bang_gia_xe(){
+    echo 'load bang gia xe';
+}
+
+function load_so_sanh_xe(){
+    echo 'load_so_sanh_xe';
+}
+
+function load_thong_tin_xe(){
+    echo 'load_thong_tin_xe';
+}
+
 add_action( 'wp_ajax_save_new_auto_db', 'save_new_auto_db' );
+add_action( 'wp_ajax_load_bang_gia_xe', 'load_bang_gia_xe' );
+add_action( 'wp_ajax_load_so_sanh_xe', 'load_so_sanh_xe' );
+add_action( 'wp_ajax_load_thong_tin_xe', 'load_thong_tin_xe' );
 
 function create_auto_posts($cateArr){
     require_once( dirname( dirname( __FILE__ ) ) . '/autoPlugin/autoDao.php' );
@@ -173,7 +190,11 @@ function create_auto_posts($cateArr){
     foreach ($autoList as $data){
         $autoPost = AutoDao::get_instance_by_post_title($data->carBrand . ' ' .$data->carName);
         if ($autoPost == false){
-            $content = "<h3>Thông số kỹ thuật<h3><div id='divInfo' value='{$data->id}' ></div>";
+            $content = "
+            <h3>Thông số kỹ thuật<h3>
+            <div id='divInfo'></div>
+            <input type='hidden' id='page_name' value='thong_tin_xe'>
+            <input type='hidden' id='autoId' value='{$data->id}'>";
             $autoPost = array(
                 'post_author' => $user_id,
                 'post_content' => $content,

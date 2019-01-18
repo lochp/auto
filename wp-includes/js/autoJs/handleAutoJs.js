@@ -1,23 +1,45 @@
-$( document ).ready(function($) {
-    $('#testDiv').combobox({
-        data: [{
-            "id":1,
-            "text":"text1"
-        },{
-            "id":2,
-            "text":"text2"
-        },{
-            "id":3,
-            "text":"text3",
-            "selected":true
-        },{
-            "id":4,
-            "text":"text4"
-        },{
-            "id":5,
-            "text":"text5"
-        }],
-        valueField:'id',
-        textField:'text'
+var handleBangGiaXe = function(){
+    var data = {
+        'action': 'load_bang_gia_xe'
+    };
+    jQuery.post(ajaxUrl, data, function(response) {
+        alert(response);
     });
+}
+
+var handleSoSanhXe = function(){
+    var data = {
+        'action': 'load_so_sanh_xe'
+    };
+    jQuery.post(ajaxUrl, data, function(response) {
+        alert(response);
+    });
+}
+
+var handleThongTinXe = function(){
+    var data = {
+        'action': 'load_thong_tin_xe',
+        'id': $('#autoId').val()
+    };
+    jQuery.post(ajaxUrl, data, function(response) {
+        alert(response);
+    });
+}
+
+$( document ).ready(function($) {
+    var pageName = $('#page_name');
+    if (pageName.length > 0){
+        pageName = pageName.val();
+        switch(pageName){
+            case 'bang_gia_xe': 
+                handleBangGiaXe();
+                break;
+            case 'so_sanh_xe':
+                handleSoSanhXe();
+                break;
+            case 'thong_tin_xe':
+                handleThongTinXe();
+                break;
+        }
+    }
 });
