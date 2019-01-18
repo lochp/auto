@@ -47,6 +47,10 @@ function init_auto_category(){
 
 // include custom jQuery
 function include_handle_auto_js() {
+    // wp_enqueue_style( 'jeasyuiJqueryUiCss', '/wp-includes/js/autoJs/jeasyui/styles/jquery-ui.css',false,null,null);
+    // wp_enqueue_style( 'jeasyuiJqueryUiCustomCss', '/wp-includes/js/autoJs/jeasyui/styles/jquery-ui-1.8.22.custom.css',false,null,null);
+    // wp_enqueue_style( 'jeasyuiCss', '/wp-includes/js/autoJs/jeasyui/themes/default/easyui.css',false,null,null);
+    // wp_enqueue_style( 'jeasyuiIconCss', '/wp-includes/js/autoJs/jeasyui/themes/icon.css',false,null,null);
 	wp_deregister_script('jquery');
     wp_enqueue_script('jquery', '/wp-includes/js/autoJs/jeasyui/jquery.min.js', array(), null, true);
     wp_enqueue_script('jeasyui', '/wp-includes/js/autoJs/jeasyui/jquery.easyui.min.js', array(), null, true);
@@ -65,10 +69,28 @@ function insert_init_pages(){
     if ($bangGiaXe == false){
         $user_id = get_current_user_id();
         $content = '
-        <input type="hidden" id="page_name" value="bang_gia_xe">
         <div id="bangGiaXe">
-            <table id="dg-bang-gia-xe"></table>
+            <div>
+                <table style="width: 100%;text-align:center;" border="1">
+                    <tbody id="table-content">
+                        <tr>
+                            <th scope="col">Mẫu xe</th>
+                            <th scope="col">Hãng</th>
+                            <th scope="col">Loại xe</th>
+                            <th scope="col">Nguồn gốc</th>
+                            <th scope="col">Giá niêm yết <em>(triệu)</em></th>
+                            <th scope="col">* Giá đàm phán <em>(triệu)</em></th>
+                            <th scope="col">Động cơ</th>
+                            <th scope="col">Công suất<br />
+                            <em>(mã lực)</em></th>
+                            <th scope="col">Mô-men xoắn<br />
+                            <em>(Nm)</em></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <input type="hidden" id="page_name" value="bang_gia_xe">
         ';
         $bangGiaXeArr = array(
             'post_author' => $user_id,
@@ -87,14 +109,10 @@ function insert_init_pages(){
     if ($soSanhXe == false){
         $user_id = get_current_user_id();
         $content = '
-        <input type="hidden" id="page_name" value="so_sanh_xe">
         <div id="soSanhXe">
-            <table style="width:90%;border: 1px solid black;">
-                <tbody>
-                    <tr><td></td></tr>
-                </tbody>
-            </table>
+            
         </div>
+        <input type="hidden" id="page_name" value="so_sanh_xe">
         ';
         $soSanhXeArr = array(
             'post_author' => $user_id,
