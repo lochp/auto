@@ -24,6 +24,8 @@ function auto_install(){
       carSize text,
       carTurningCircle text,
       carType text,
+      postId mediumint(9),
+      postName text,
       PRIMARY KEY  (id)
     ) $charset_collate;";
     
@@ -189,6 +191,8 @@ function create_auto_posts($cateArr){
     $user_id = get_current_user_id();
     foreach ($autoList as $data){
         $autoPost = AutoDao::get_instance_by_post_title($data->carBrand . ' ' .$data->carName);
+        $postId = null;
+        $postName = '';
         if ($autoPost == false){
             $content = "
             <h3>Thông số kỹ thuật<h3>
@@ -203,8 +207,13 @@ function create_auto_posts($cateArr){
                 'post_type' => 'post',
                 'post_category' => array($cateArr[strtolower($data->carBrand)]->term_id)
             );
-            wp_insert_post($autoPost);
+            $postId = wp_insert_post($autoPost);
+            $postName = get_post($postId)->post_name;
+        }else{
+            $postId = $autoPost->ID;
+            $postName = $autoPost->post_name;
         }
+        $wpdb->update($table_name, array('postId' => $postId, 'postName' => $postName), array('id' => $data->id));
     }
 }
 
