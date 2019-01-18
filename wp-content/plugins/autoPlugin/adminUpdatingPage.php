@@ -45,6 +45,30 @@ function init_auto_category(){
     }
 }
 
+function init_auto_brand_page(){
+    require_once( dirname( dirname( __FILE__ ) ) . '/autoPlugin/autoDao.php' );
+    require_once( ABSPATH . 'wp-includes/post.php' );
+    $catArr = array("chevrolet", "ford", "honda", "hyundai", "infiniti", "isuzu", "kia", "lexus", "maserati", "mazda", "mercedes", "mitsubishi", "nissan", "peugeot",
+    "porsche", "renault", "ssangyong", "subaru", "suzuki", "toyota", "vinfast", "volkswagen", "volvo");
+    $user_id = get_current_user_id();
+    foreach($catArr as $c){
+        $brandPage = AutoDao::get_instance_by_post_name(strtolower($c));
+        if ($brandPage == false){
+            $brandName = ucfirst($c);
+            $content = "<div>Trang Giới Thiệu Hãng $brandName";
+            $brandArr = array(
+                'post_author' => $user_id,
+                'post_content' => $content,
+                'post_title' => ucfirst($c),
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'post_name' => strtolower($c)
+            );
+            wp_insert_post($brandArr);
+        }
+    }
+}
+
 // include custom jQuery
 function include_handle_auto_js() {
     // wp_enqueue_style( 'jeasyuiJqueryUiCss', '/wp-includes/js/autoJs/jeasyui/styles/jquery-ui.css',false,null,null);
@@ -133,6 +157,7 @@ function init_data(){
 
 init_data();
 add_action('wp_loaded', 'insert_init_pages');
+add_action('wp_loaded', 'init_auto_brand_page');
 
 function myplugin_ajaxurl() {
     echo '<script type="text/javascript">
