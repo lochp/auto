@@ -165,7 +165,16 @@ function save_new_auto_db_javascript() { ?>
 }
 
 function load_bang_gia_xe(){
-    echo 'load bang gia xe';
+    global $wpdb;
+    $table_name = $wpdb->prefix . "all_specifications";
+    $autoList = $wpdb->get_results( "SELECT * FROM {$table_name} where updatedTime = (select max(updatedTime) from {$table_name} )");
+    foreach($autoList as $c){
+        unset($c->updatedTime);
+        unset($c->carCompetitors);
+        unset($c->carId);
+    }
+    echo json_encode($autoList);
+    wp_die();
 }
 
 function load_so_sanh_xe(){

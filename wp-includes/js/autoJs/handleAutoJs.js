@@ -3,7 +3,8 @@ var handleBangGiaXe = function(){
         'action': 'load_bang_gia_xe'
     };
     jQuery.post(ajaxUrl, data, function(response) {
-        alert(response);
+        var autoList = JSON.parse(response);
+        console.log(autoList);
     });
 }
 
