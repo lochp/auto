@@ -8,7 +8,6 @@ var handleBangGiaXe = function(){
     };
     jQuery.post(ajaxUrl, data, function(response) {
         var autoList = JSON.parse(response);
-        console.log(autoList);
         var content = '';
         autoList.forEach(c => {
             content += '<tr>';
@@ -44,7 +43,11 @@ var handleThongTinXe = function(){
         'id': $('#autoId').val()
     };
     jQuery.post(ajaxUrl, data, function(response) {
-        alert(response);
+        var auto = JSON.parse(response);
+        auto = auto[0];
+        for (var att in auto){
+            $('#' + att).html(auto[att]);
+        }
     });
 }
 

@@ -221,11 +221,19 @@ function load_bang_gia_xe(){
 }
 
 function load_so_sanh_xe(){
-    echo 'load_so_sanh_xe';
+    wp_die();
 }
 
 function load_thong_tin_xe(){
-    echo 'load_thong_tin_xe';
+    global $wpdb;
+    $autoId =  $_POST['id'];
+    $table_name = $wpdb->prefix . "all_specifications";
+    $auto = $wpdb->get_results( $wpdb->prepare("SELECT * FROM {$table_name} where id=%d", $autoId));
+    unset($auto->carId);
+    unset($auto->carCompetitors);
+    unset($auto->updatedTime);
+    echo json_encode($auto);
+    wp_die();
 }
 
 add_action( 'wp_ajax_save_new_auto_db', 'save_new_auto_db' );
@@ -248,7 +256,62 @@ function create_auto_posts($cateArr){
         if ($autoPost == false){
             $content = "
             <h3>Thông số kỹ thuật<h3>
-            <div id='divInfo'></div>
+            <div id='divInfo'>
+                <table style='width:100%;' border='1'>
+                    <tr>
+                        <th scope='row'>Mẫu xe</th>
+                        <td><label id='carName'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Giá niêm yết</th>
+                        <td><label id='carPrice'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Giá đàm phán</th>
+                        <td><label id='carPriceDeviation'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Dài x rộng x cao (mm)</th>
+                        <td><label id='carSize'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Dung tích bình xăng (lít)</th>
+                        <td><label id='carFuelTankCapacity'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Động cơ</th>
+                        <td><label id='carEngine'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Công suất (mã lực)</th>
+                        <td><label id='carPower'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Mô-men xoắn (Nm)</th>
+                        <td><label id='carMoment'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Khoảng sáng gầm (mm)</th>
+                        <td><label id='carGroundClearance'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Đường kính vòng quay tối thiểu (m)</th>
+                        <td><label id='carTurningCircle'><label></td>
+                    </tr>
+                        <tr>
+                        <th scope='row'>Nguồn gốc</th>
+                        <td><label id='carOrigin'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Loại xe</th>
+                        <td><label id='carType'><label></td>
+                    </tr>
+                    <tr>
+                        <th scope='row'>Hộp số</th>
+                        <td><label id='carGear'><label></td>
+                    </tr>
+                </table>
+            </div>
             <input type='hidden' id='page_name' value='thong_tin_xe'>
             <input type='hidden' id='autoId' value='{$data->id}'>";
             $autoPost = array(
