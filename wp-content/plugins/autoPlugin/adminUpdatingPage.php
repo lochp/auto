@@ -132,12 +132,78 @@ function insert_init_pages(){
     $soSanhXe = AutoDao::get_instance_by_post_name('so-sanh-xe');
     if ($soSanhXe == false){
         $user_id = get_current_user_id();
-        $content = '
-        <div id="soSanhXe">
-            
+        $content = "
+        <div id='soSanhXe'>
+            <table width='200' border='1'>
+                <tr>
+                <th scope='row'>Mẫu xe</th>
+                <td><select id='carName1'><select></td>
+                <td><select id='carName2'><select></td>
+                </tr>
+                <tr>
+                <th scope='row'>Giá niêm yết</th>
+                <td><label id='carPrice1'><label></td>
+                <td><label id='carPrice2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Giá đàm phán</th>
+                <td><label id='carPriceDeviation1'><label></td>
+                <td><label id='carPriceDeviation2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Dài x rộng x cao (mm)</th>
+                <td><label id='carSize1'><label></td>
+                <td><label id='carSize2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Dung tích bình xăng (lít)</th>
+                <td><label id='carFuelTankCapacity1'><label></td>
+                <td><label id='carFuelTankCapacity2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Động cơ</th>
+                <td><label id='carEngine1'><label></td>
+                <td><label id='carEngine2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Công suất (mã lực)</th>
+                <td><label id='carPower1'><label></td>
+                <td><label id='carPower2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Mô-men xoắn (Nm)</th>
+                <td><label id='carMoment1'><label></td>
+                <td><label id='carMoment2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Khoảng sáng gầm (mm)</th>
+                <td><label id='carGroundClearance1'><label></td>
+                <td><label id='carGroundClearance2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Đường kính vòng quay tối thiểu (m)</th>
+                <td><label id='carTurningCircle1'><label></td>
+                <td><label id='carTurningCircle2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Nguồn gốc</th>
+                <td><label id='carOrigin1'><label></td>
+                <td><label id='carOrigin2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Loại xe</th>
+                <td><label id='carType1'><label></td>
+                <td><label id='carType2'><label></td>
+                </tr>
+                <tr>
+                <th scope='row'>Hộp số</th>
+                <td><label id='carGear1'><label></td>
+                <td><label id='carGear2'><label></td>
+                </tr>
+            </table>
         </div>
-        <input type="hidden" id="page_name" value="so_sanh_xe">
-        ';
+        <input type='hidden' id='page_name' value='so_sanh_xe'>
+        ";
         $soSanhXeArr = array(
             'post_author' => $user_id,
             'post_content' => $content,
@@ -221,7 +287,7 @@ function load_bang_gia_xe(){
 }
 
 function load_so_sanh_xe(){
-    wp_die();
+    load_bang_gia_xe();
 }
 
 function load_thong_tin_xe(){
@@ -263,11 +329,11 @@ function create_auto_posts($cateArr){
                         <td><label id='carName'><label></td>
                     </tr>
                     <tr>
-                        <th scope='row'>Giá niêm yết</th>
+                        <th scope='row'>Giá niêm yết(Triệu VNĐ)</th>
                         <td><label id='carPrice'><label></td>
                     </tr>
                     <tr>
-                        <th scope='row'>Giá đàm phán</th>
+                        <th scope='row'>Giá đàm phán(Triệu VNĐ)</th>
                         <td><label id='carPriceDeviation'><label></td>
                     </tr>
                     <tr>

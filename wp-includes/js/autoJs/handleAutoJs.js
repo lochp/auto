@@ -11,7 +11,7 @@ var handleBangGiaXe = function(){
         var content = '';
         autoList.forEach(c => {
             content += '<tr>';
-            content += '	<td scope="col"><a href="'+createPostLink(c.postName)+'" target="blank">'+c.carName+'</a></td>';
+            content += '	<td scope="col"><a href="'+createPostLink(c.postName)+'" target="blank">'+c.carBrand + ' ' + c.carName+'</a></td>';
             content += '	<td scope="col"><a href="'+createPostLink(c.carBrand)+'" target="blank">'+c.carBrand+'</a></td>';
             content += '	<td scope="col">'+c.carType+'</td>';
             content += '	<td scope="col">'+c.carOrigin+'</td>';
@@ -28,12 +28,42 @@ var handleBangGiaXe = function(){
     });
 }
 
+var changeCar = function(carNum, autoId){
+    if (autoId == null){
+        autoId = $('#carName'+carNum).val();
+    }
+    var auto = null;
+    autoList.forEach(c => {
+        if (c.id == autoId){
+            auto = c;
+        }
+    });
+    for (var att in auto){
+        if (att != 'carName'){
+            $('#' + att + carNum).html(auto[att]);
+        }
+    }
+}
+
+
 var handleSoSanhXe = function(){
     var data = {
         'action': 'load_so_sanh_xe'
     };
     jQuery.post(ajaxUrl, data, function(response) {
-        alert(response);
+        window.autoList = JSON.parse(response);
+        var content = '';
+        autoList.forEach(c => {
+            content += '<option value="'+c.id+'">'+c.carBrand + ' ' + c.carName+'</option>';
+        });
+        $('#carName1').append(content);
+        $('#carName2').append(content);
+        var f1 = changeCar.bind(this, 1, null);
+        var f2 = changeCar.bind(this, 2, null);
+        $('#carName1').bind('change', f1);
+        $('#carName2').bind('change', f2);
+        changeCar(1, autoList[0].id);
+        changeCar(2, autoList[0].id);
     });
 }
 
